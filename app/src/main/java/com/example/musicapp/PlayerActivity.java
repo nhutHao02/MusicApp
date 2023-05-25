@@ -2,14 +2,17 @@ package com.example.musicapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -27,23 +30,24 @@ public class PlayerActivity extends AppCompatActivity {
     CircleImageView imgSong,imgDisc;
     SeekBar seekBar;
     Button btnPlay, btnPrev, btnNext, btnRepeat, btnShuffle;
-    MediaPlayer mediaPlayer;
+    ImageView btnBack;
+    private static MediaPlayer mediaPlayer;
     List<Song> myListSong;
     int pos;
     Animation animation;
     boolean repeat,shuffle;
+    Handler handler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
-        //anh xa
-        anhXa();
-
-        if (mediaPlayer!=null){
+        if(mediaPlayer != null){
             mediaPlayer.stop();
             mediaPlayer.release();
-            mediaPlayer=null;
         }
+
+        //anh xa
+        anhXa();
         repeat=false;
         shuffle=false;
         //get song from MainActivity
@@ -179,10 +183,16 @@ public class PlayerActivity extends AppCompatActivity {
                 }
             }
         });
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(PlayerActivity.this, MainActivity.class));
+            }
+        });
 
     }
     private void updateTime(){
-        Handler handler=new Handler();
+        handler=new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -240,7 +250,11 @@ public class PlayerActivity extends AppCompatActivity {
     private void initMediaPlayer() {
         String url=myListSong.get(pos).getLink();
         mediaPlayer=new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mediaPlayer.setAudioAttributes(
+                new AudioAttributes
+                        .Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .build());
         try {
             mediaPlayer.setDataSource(url);
             mediaPlayer.prepareAsync();
@@ -261,6 +275,8 @@ public class PlayerActivity extends AppCompatActivity {
 
         seekBar=(SeekBar) findViewById(R.id.playerSeekbar);
 
+        btnBack=(ImageView) findViewById(R.id.playerBack);
+
         btnPlay=(Button) findViewById(R.id.playerBtnPlay);
         btnNext=(Button) findViewById(R.id.playerBtnNext);
         btnPrev=(Button) findViewById(R.id.playerBtnPrev);
@@ -268,4 +284,17 @@ public class PlayerActivity extends AppCompatActivity {
         btnShuffle=(Button) findViewById(R.id.playerBtnShuffle);
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+            handler.removeCallbacksAndMessages(null);
+            Log.d("AAA", "onDestroy: ");
+        }
+    }
+
 }

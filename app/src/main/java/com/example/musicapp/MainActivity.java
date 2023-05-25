@@ -7,11 +7,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.animation.Animator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     List<Song> myFavorites=new ArrayList<Song>();
     ListView lvSong;
     ListViewSongAdapter adapter=null;
+    LinearLayout lyMore, lySearch, lyPlaylist;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
         anhXa();
         //Load data
         loadSongs();
-
         lvSong=(ListView) findViewById(R.id.listViewId);
         adapter=new ListViewSongAdapter(MainActivity.this,R.layout.list_view_item,myFavorites);
         lvSong.setAdapter(adapter);
@@ -49,10 +51,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Song song = (Song) lvSong.getItemAtPosition(i);
+
                 startActivity(new Intent(MainActivity.this,PlayerActivity.class)
                         .putExtra("MyListSong", (Serializable) myFavorites)
                         .putExtra("pos",i));
 
+            }
+        });
+        lyMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, MoreActivity.class));
             }
         });
 
@@ -92,5 +101,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void anhXa() {
+        lyMore=(LinearLayout) findViewById(R.id.lyMore);
+        lySearch=(LinearLayout) findViewById(R.id.lySearch);
+        lyPlaylist=(LinearLayout) findViewById(R.id.lyPlayList);
     }
+
 }
