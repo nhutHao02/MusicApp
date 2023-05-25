@@ -1,5 +1,6 @@
 package com.example.musicapp;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +38,7 @@ public class ListViewSongAdapter extends BaseAdapter {
         return 0;
     }
     private class ViewHolder{
-        ImageView img;
+        ImageView img,btn;
         TextView nameSong;
         TextView author;
     }
@@ -50,9 +51,10 @@ public class ListViewSongAdapter extends BaseAdapter {
             view=inflater.inflate(layout,null);
 
             //anh xa
-            holder.img=(ImageView) view.findViewById(R.id.imgSong);
-            holder.nameSong=(TextView) view.findViewById(R.id.nameSong);
-            holder.author=(TextView) view.findViewById(R.id.nameAuthor);
+            holder.img      =(ImageView) view.findViewById(R.id.imgSong);
+            holder.nameSong =(TextView) view.findViewById(R.id.nameSong);
+            holder.author   =(TextView) view.findViewById(R.id.nameAuthor);
+            holder.btn      = (ImageView) view.findViewById(R.id.icAdd);
             view.setTag(holder);
         }else {
             holder= (ViewHolder) view.getTag();
@@ -64,8 +66,17 @@ public class ListViewSongAdapter extends BaseAdapter {
         holder.nameSong.setText(song.getNameSong());
         holder.author.setText(song.getAuthor());
         Picasso.get().load(song.getImg()).into(holder.img);
+        holder.btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogAddPlayList();
+            }
+        });
 
 
         return view;
+    }
+
+    private void DialogAddPlayList() {
     }
 }
