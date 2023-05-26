@@ -10,7 +10,12 @@
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:windowBackground">@drawable/dark_background</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/primary</item>
         <!-- Customize your theme here. -->
+    </style>
+    <style name="ButtonGradient" parent="TextAppearance.AppCompat.Button">
+        <item name="colorPrimary">@null</item>
+        <item name="colorPrimaryVariant">@null</item>
     </style>
 </resources>
