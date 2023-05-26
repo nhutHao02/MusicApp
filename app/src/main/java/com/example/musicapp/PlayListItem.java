@@ -1,22 +1,15 @@
 package com.example.musicapp;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.ListView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.animation.Animator;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -28,12 +21,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class PlayListItem extends AppCompatActivity {
     DatabaseReference mDatabase;
+
     List<Song> myFavorites=new ArrayList<Song>();
     ListView lvSong;
     ListViewSongAdapter adapter=null;
-    LinearLayout lyMore, lySearch, lyPlaylist;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +36,9 @@ public class MainActivity extends AppCompatActivity {
         anhXa();
         //Load data
         loadSongs();
+
         lvSong=(ListView) findViewById(R.id.listViewId);
-        adapter=new ListViewSongAdapter(MainActivity.this,R.layout.list_view_item,myFavorites);
+        adapter=new ListViewSongAdapter(PlayListItem.this,R.layout.list_view_item,myFavorites);
         lvSong.setAdapter(adapter);
 
         //event list View
@@ -52,8 +46,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Song song = (Song) lvSong.getItemAtPosition(i);
-
-                startActivity(new Intent(MainActivity.this,PlayerActivity.class)
+                startActivity(new Intent(PlayListItem.this,PlayerActivity.class)
                         .putExtra("MyListSong", (Serializable) myFavorites)
                         .putExtra("pos",i));
 
@@ -65,21 +58,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Tạo Intent để chuyển đến Activity mục tiêu
-                Intent intent = new Intent(MainActivity.this, PlayListActivity.class);
+                Intent intent = new Intent(PlayListItem.this, PlayListActivity.class);
                 // Chuyển đến Activity mục tiêu
                 startActivity(intent);
-            }
-        });
-        lyMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, MoreActivity.class));
-            }
-        });
-        lySearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, SearchActivity.class));
             }
         });
 
@@ -119,9 +100,5 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void anhXa() {
-        lyMore=(LinearLayout) findViewById(R.id.lyMore);
-        lySearch=(LinearLayout) findViewById(R.id.lySearch);
-        lyPlaylist=(LinearLayout) findViewById(R.id.lyPlayList);
     }
-
 }
